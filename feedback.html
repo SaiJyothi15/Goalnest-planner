@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Feedback - GoalNest</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        body {
+            background-size: cover;
+            font-family: 'Segoe UI', sans-serif;
+            color: #333;
+        }
+        .container {
+            max-width: 600px;
+            margin: 80px auto;
+            background:rgb(255,207,241,0.3);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+        }
+        h2 {
+            text-align: center;
+            color: #ff7f50;
+        }
+        textarea, input[type="text"], input[type="email"] {
+            width: 100%;
+            padding: 12px;
+            margin: 12px 0;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px;
+            width: 100%;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .success-msg {
+            color: green;
+            font-weight: bold;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Give Your Feedback</h2>
+        <form method="POST" action="/submit_feedback">
+            <textarea name="feedback" rows="5" placeholder="Your thoughts, suggestions, or experience..." required></textarea>
+            <button type="submit">Submit Feedback</button>
+        </form>
+    </div>
+</body>
+</html>

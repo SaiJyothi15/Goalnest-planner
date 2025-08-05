@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>GoalNest – Daily Task Planner</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-image: url("https://img.freepik.com/premium-vector/vector-illustration-motivation-achieve-business-target-by-completing-task-hand_675567-1769.jpg?w=2000");
+      background-size: cover;
+      background-attachment: fixed;
+      background-position: center;
+      color:white;
+    }
+
+    .container {
+      background: rgb(119,181,254,0.1);
+      padding: 2rem;
+      max-width:fit-content;
+      margin: auto;
+      border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    h1, h2, h3 {
+      font-family: 'Baloo 2', cursive;
+      color: #4a148c;
+    }
+
+    .task-input input, .task-input select {
+      padding: 10px;
+      margin-right: 5px;
+      border-radius: 8px;
+      border: 1px solid blue;
+    }
+
+    .task-input button {
+      background-color: #4a148c;
+      color:#dfff00;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .task-list li {
+  margin: 8px 0;
+  font-weight: bold;
+  padding: 12px;
+  background-color:white;  /* Light pink background */
+  color: yellowgreen;             /* Deep purple text */
+  border-radius: 10px;
+  border: 1px solid #e0b0ff;  /* Optional soft border */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+
+    .task-list button {
+      margin-left: 8px;
+    }
+
+    .motivation, .tip-box, .quotes-section, .why-goalnest {
+      margin-top: 2rem;
+      padding: 1rem;
+      background:rgb(243,150,250,0.1);
+      border-left: 5px solid #32174d;
+      border-radius: 8px;
+    }
+
+    .quotes-section blockquote {
+      font-style: italic;
+      font-size: 18px;
+      color:#483d8b;
+      margin: 0;
+      text-align: center;
+    }
+
+    .streak-box {
+      font-weight: bold;
+      margin-top: 1rem;
+      font-size: 18px;
+    }
+
+
+    footer.why-goalnest ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    footer.why-goalnest li {
+      margin-bottom: 6px;
+      font-weight: 500;
+    }
+
+  </style>
+</head>
+<body>
+  
+  <nav>
+  <a href="/feedback">Feedback</a>
+</nav>
+  <div class="container">
+    <header>
+<div style="text-align: center; line-height: 1.2;">
+  <h1 style="margin-bottom: 0; font-family: 'Segoe UI', sans-serif; color: darkblue;">GoalNest Planner</h1>
+  <p style="margin-top: 4px; font-style: italic; color: #4caf50;">🌱 Build habits, grow goals</p>
+</div>
+    </header>
+    <div class="streak-box">
+      🔥 Streak: <span id="streak">0</span> days
+    </div>
+    <canvas id="streakChart" width="400" height="150" style="margin-top: 13px;"></canvas>
+
+
+    <section class="task-input">
+      <input id="taskInput" placeholder="Enter task">
+      <select id="catSelect">
+        <option>General</option>
+        <option>Study</option>
+        <option>Work</option>
+        <option>Fitness</option>
+      </select>
+      <button onclick="addTask()">Add</button>
+    </section>
+
+    <ul id="taskList" class="task-list"></ul>
+
+    <section class="motivation">
+      <h2>✨ Motivation Boost</h2>
+      <p id="encourageText">Complete a task to get a success boost!</p>
+    </section>
+
+    <section class="tip-box">
+      <h2>💡 Daily Tip</h2>
+      <p id="tipText">Your tip will appear here.</p>
+    </section>
+
+    <section class="quotes-section">
+      <h2>📝 Daily Quote</h2>
+      <blockquote id="quoteText">"Success doesn’t come from what you do occasionally. It comes from what you do consistently."</blockquote>
+    </section>
+
+    <footer class="why-goalnest">
+      <h3>Why GoalNest? 🐣</h3>
+      <ul>
+        <li>✔️ Simple and efficient daily task planner</li>
+        <li>💡 Motivational suggestions for consistency</li>
+        <li>🔥 Visual streak tracker to stay productive</li>
+        <li>🗑️ Delete & manage tasks easily</li>
+        <li>🔔 Notifications when tasks are completed</li>
+        <li>🎨 Colorful, calming interface</li>
+        <li>📚 Ideal for both study and work planning</li>
+        <li>📱 Responsive and mobile-friendly design</li>
+        <li>🚀 Boosts productivity with minimal effort</li>
+      </ul>
+    </footer>
+  </div>
+
+  <!-- Script Section -->
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+  <script>
+    const quotes = [
+      "Discipline is the bridge between goals and accomplishment.",
+      "Focus on being productive instead of busy.",
+      "Start where you are. Use what you have. Do what you can.",
+      "Every accomplishment starts with the decision to try.",
+      "Success is the sum of small efforts repeated day in and day out.",
+      "Don’t limit your challenges, challenge your limits.",
+      "It always seems impossible until it is done.",
+      "The secret of getting ahead is getting started.",
+      "Work hard in silence, let success make the noise.",
+      "Action is the foundational key to all success."
+    ];
+
+
+    function loadRandomQuote() {
+      const quote = quotes[Math.floor(Math.random() * quotes.length)];
+      document.getElementById("quoteText").innerText = `“${quote}”`;
+    }
+
+    document.addEventListener("DOMContentLoaded", loadRandomQuote);
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+async function fetchStreak() {
+  const res = await fetch('/streak');
+  const data = await res.json();
+  document.getElementById("streak").innerText = data.streak;
+  drawStreakChart(data.streak, data.longest);
+}
+
+function drawStreakChart(current, longest) {
+  const ctx = document.getElementById('streakChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Current Streak', 'Longest Streak'],
+      datasets: [{
+        label: 'Streak Progress',
+        data: [current, longest],
+        backgroundColor: ['rgb(255,207,241)', 'rgb(172,225,175)']
+      }]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+}
+
+document.addEventListener('DOMContentLoaded', fetchStreak);
+</script>
+
+</body>
+</html>

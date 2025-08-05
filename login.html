@@ -1,0 +1,20 @@
+<!-- templates/login.html -->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Login - GoalNest</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Login to GoalNest</h1>
+ <form method="POST" action="/login">
+    <input type="text" name="Email" placeholder="Email" />
+    <input type="password" name="password" placeholder="Password" />
+    <button type="submit">Login</button>
+</form>
+    <p>Don't have an account? <a href="/register">Register</a></p>
+  </div>
+</body>
+</html>
+
